@@ -215,6 +215,15 @@ def main(_user, _passwd, min_1, max_1):
     # print(response)
     result = f"[{now}]\n账号：{user[:3]}****{user[7:]}\n修改步数（{step}）[" + response['message'] + "]\n"
     print(result)
+    #推送消息
+    api = "https://sctapi.ftqq.com/" + sys.argv[6] + ".send"
+    title = "刷步数结果通知"
+    content = result
+    data = {
+    'text':title,
+    'desp':content
+    }
+    req777 = requests.post(api,data = data)
     return result
 
 
