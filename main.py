@@ -219,12 +219,11 @@ def main(_user, _passwd, min_1, max_1):
     api = "https://sctapi.ftqq.com/SCT8677TuC6VvFIyzUxEcFzaRy0ys5cF.send"
     title = "刷步数结果通知"
     content = result
-    channel = 66
     data = {
     'text':title,
     'desp':content
     }
-    req777 = requests.post(api,data = data,channel)
+    req777 = requests.post(api,data = data)
     return result
 
 
