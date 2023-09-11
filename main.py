@@ -225,8 +225,18 @@ def main(_user, _passwd, min_1, max_1):
     # }
     # req777 = requests.post(api,data = data)
     #pushplus推送
-    url = "http://www.pushplus.plus/send?token=5e59fa9a2d5946a38cb9546d69e41f29&title=刷步数结果通知&content=result&template=html"
-    res11 = requests.get(url)
+    token = "5e59fa9a2d5946a38cb9546d69e41f29"
+    title = "刷步数结果通知"
+    content = result
+    url = "http://www.pushplus.plus/send"
+    data = {
+    "token":token,
+    "title":title,
+    "content":content
+    }
+    body=json.dumps(data).encode(encoding='utf-8')
+    headers = {'Content-Type':'application/json'}
+    res11 = requests.post(url,data=body,headers=headers)
     return result
 
 
