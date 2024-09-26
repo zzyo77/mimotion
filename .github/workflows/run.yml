@@ -35,4 +35,4 @@ jobs:
           open_get_weather='${{ secrets.OPEN_GET_WEATHER }}'
           area='${{ secrets.AREA }}'
           qywx_am='${{ secrets.QYWX_AM }}'
-          python3 main.py ${user} ${passwd} ${open_get_weather} ${area}${qywx_am}
+          python3 main.py ${user} ${passwd} ${open_get_weather} ${area} ${qywx_am}
