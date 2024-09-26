@@ -258,9 +258,6 @@ class WeCom:
         self.CORPSECRET = corpsecret
         self.AGENTID = agentid
         self.ORIGIN = "https://qyapi.weixin.qq.com"
-        if push_config.get("QYWX_ORIGIN"):
-            self.ORIGIN = push_config.get("QYWX_ORIGIN")
-
     def get_access_token(self):
         url = f"{self.ORIGIN}/cgi-bin/gettoken"
         values = {
