@@ -225,7 +225,7 @@ def wecom_app(title: str, content: str) -> None:
     """
     通过 企业微信 APP 推送消息。
     """
-    QYWX_AM_AY = re.split(",", sys.argv[6])
+    QYWX_AM_AY = re.split(",", sys.argv[5])
     if 4 < len(QYWX_AM_AY) > 5:
         print("QYWX_AM 设置错误!!\n取消推送")
         return
