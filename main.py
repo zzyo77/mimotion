@@ -215,7 +215,42 @@ def main(_user, _passwd, min_1, max_1):
     # print(response)
     result = f"[{now}]\n账号：{user[:3]}****{user[7:]}\n修改步数（{step}）[" + response['message'] + "]\n"
     print(result)
+    title = "刷步数结果通知"
+    content = result
+    wecom_app(title,content)
     return result
+
+#消息推送
+def wecom_app(title: str, content: str) -> None:
+    """
+    通过 企业微信 APP 推送消息。
+    """
+    QYWX_AM_AY = re.split(",", sys.argv[6])
+    if 4 < len(QYWX_AM_AY) > 5:
+        print("QYWX_AM 设置错误!!\n取消推送")
+        return
+    print("企业微信 APP 服务启动")
+
+    corpid = QYWX_AM_AY[0]
+    corpsecret = QYWX_AM_AY[1]
+    touser = QYWX_AM_AY[2]
+    agentid = QYWX_AM_AY[3]
+    try:
+        media_id = QYWX_AM_AY[4]
+    except IndexError:
+        media_id = ""
+    wx = WeCom(corpid, corpsecret, agentid)
+    # 如果没有配置 media_id 默认就以 text 方式发送
+    if not media_id:
+        message = title + "\n\n" + content
+        response = wx.send_text(message, touser)
+    else:
+        response = wx.send_mpnews(title, content, media_id, touser)
+
+    if response == "ok":
+        print("企业微信推送成功！")
+    else:
+        print("企业微信推送失败！错误信息如下：\n", response)
 
 
 # 获取时间戳
