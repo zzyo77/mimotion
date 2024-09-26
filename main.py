@@ -252,7 +252,66 @@ def wecom_app(title: str, content: str) -> None:
         print("企业微信推送成功！")
     else:
         print("企业微信推送失败！错误信息如下：\n", response)
+class WeCom:
+    def __init__(self, corpid, corpsecret, agentid):
+        self.CORPID = corpid
+        self.CORPSECRET = corpsecret
+        self.AGENTID = agentid
+        self.ORIGIN = "https://qyapi.weixin.qq.com"
+        if push_config.get("QYWX_ORIGIN"):
+            self.ORIGIN = push_config.get("QYWX_ORIGIN")
 
+    def get_access_token(self):
+        url = f"{self.ORIGIN}/cgi-bin/gettoken"
+        values = {
+            "corpid": self.CORPID,
+            "corpsecret": self.CORPSECRET,
+        }
+        req = requests.post(url, params=values)
+        data = json.loads(req.text)
+        return data["access_token"]
+
+    def send_text(self, message, touser="@all"):
+        send_url = (
+            f"{self.ORIGIN}/cgi-bin/message/send?access_token={self.get_access_token()}"
+        )
+        send_values = {
+            "touser": touser,
+            "msgtype": "text",
+            "agentid": self.AGENTID,
+            "text": {"content": message},
+            "safe": "0",
+        }
+        send_msges = bytes(json.dumps(send_values), "utf-8")
+        respone = requests.post(send_url, send_msges)
+        respone = respone.json()
+        return respone["errmsg"]
+
+    def send_mpnews(self, title, message, media_id, touser="@all"):
+        send_url = (
+            f"{self.ORIGIN}/cgi-bin/message/send?access_token={self.get_access_token()}"
+        )
+        send_values = {
+            "touser": touser,
+            "msgtype": "mpnews",
+            "agentid": self.AGENTID,
+            "mpnews": {
+                "articles": [
+                    {
+                        "title": title,
+                        "thumb_media_id": media_id,
+                        "author": "Author",
+                        "content_source_url": "",
+                        "content": message.replace("\n", "<br/>"),
+                        "digest": message,
+                    }
+                ]
+            },
+        }
+        send_msges = bytes(json.dumps(send_values), "utf-8")
+        respone = requests.post(send_url, send_msges)
+        respone = respone.json()
+        return respone["errmsg"]
 
 # 获取时间戳
 def get_time():
