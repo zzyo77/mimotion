@@ -11,9 +11,6 @@ import requests
 
 import pytz
 
-# 创建北京时区对象（Asia/Shanghai）
-tz_beijing = pytz.timezone('Asia/Shanghai')
-
 # 开启根据地区天气情况降低步数（默认关闭）
 open_get_weather = sys.argv[3]
 # 设置获取天气的地区（上面开启后必填）如：area = "宁波"
@@ -25,8 +22,8 @@ area = sys.argv[4]
 K_dict = {"多云": 0.9, "阴": 0.8, "小雨": 0.7, "中雨": 0.5, "大雨": 0.4, "暴雨": 0.3, "大暴雨": 0.2, "特大暴雨": 0.2}
 
 # 北京时间
-#time_bj = datetime.datetime.today() + datetime.timedelta(hours=8)
-now = tz_beijing.strftime("%Y-%m-%d %H:%M:%S")
+time_bj = datetime.datetime.today() + datetime.timedelta(hours=8)
+now = time_bj.strftime("%Y-%m-%d %H:%M:%S")
 headers = {'User-Agent': 'MiFit/5.3.0 (iPhone; iOS 14.7.1; Scale/3.00)'}
 
 
@@ -317,9 +314,10 @@ class WeCom:
 
 # 获取时间戳
 def get_time():
-    url = 'http://worldtimeapi.org/api/timezone/Asia/Shanghai'
-    response = requests.get(url, headers=headers).json()
-    t = str(response['unixtime'])+'000'
+    utc_now = datetime.datetime.utcnow()
+    beijing_tz = pytz.timezone('Asia/Shanghai')
+    beijing_now = utc_now.replace(tzinfo=pytz.utc).astimezone(beijing_tz)
+    t = int(beijing_now.timestamp() * 1000)
     return t
 
 
